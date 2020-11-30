@@ -1,0 +1,17 @@
+;[DataBase]
+host     =
+port     = 3306
+schema   =
+driver   = com.mysql.cj.jdbc.Driver
+username =
+password =
+maxPool  = 4
+minIdle  = 2
+
+;[ApiServer]
+ssl    = false
+port   = 63340
+worker = 4
+
+;[SysServer]
+port = 60000

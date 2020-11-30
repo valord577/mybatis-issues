@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+  <Properties>
+    <Property name="log-pattern">
+      %d{yyyy-MM-dd HH:mm:ss.SSS} [%style{%5L}{magenta}] %highlight{%5p}{TRACE=blue, DEBUG=green, INFO=green, WARN=yellow, ERROR=red, FATAL=red} - %style{%30.30c}{cyan}: %m%n
+    </Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout charset="utf-8" pattern="${log-pattern}" />
+    </Console>
+  </Appenders>
+
+  <!-- Logger levels: trace, debug, info, warn, error, fatal -->
+  <Loggers>
+    <!-- name 是你需要打log的包名 -->
+    <!--
+    <Logger name="" level="INFO" additivity="false" includeLocation="true">
+      <AppenderRef ref="Console" />
+    </Logger>
+    -->
+
+    <Root level="INFO" additivity="false" includeLocation="true">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>

@@ -1,0 +1,77 @@
+plugins {
+    id 'java'
+}
+
+group _group
+version _version
+
+def _javaVersion = JavaVersion.VERSION_14
+def _sourceCompat = JavaVersion.toVersion(_javaVersion)
+def _targetCompat = JavaVersion.toVersion(_javaVersion)
+
+java {
+    sourceCompatibility = _sourceCompat
+    targetCompatibility = _targetCompat
+}
+
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+}
+
+dependencies {
+    implementation(group: 'org.apache.logging.log4j', name: 'log4j-slf4j18-impl', version: "${_log4j2_version}")
+    implementation(group: 'org.mybatis', name: 'mybatis', version: "${_mybatis_version}")
+    implementation(group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: "${_jackson_version}") {
+        exclude(group: "jakarta.activation", module: "jakarta.activation-api")
+        exclude(group: "jakarta.xml.bind", module: "jakarta.xml.bind-api")
+    }
+    implementation(group: 'com.zaxxer', name: 'HikariCP', version: "${_hikariCp_version}") {
+        exclude(group: "org.slf4j", module: "slf4j-api")
+    }
+    implementation(group: 'mysql', name: 'mysql-connector-java', version: "${_jdbcMysql_version}")
+
+    implementation(group: 'io.vertx', name: 'vertx-core', version: "${_vertx_version}") {
+        exclude(group: "com.fasterxml.jackson.core")
+    }
+    implementation(group: 'io.vertx', name: 'vertx-web', version: "${_vertx_version}") {
+        exclude(group: "com.fasterxml.jackson.core")
+        exclude(group: "io.vertx", module: "vertx-core")
+        exclude(group: "io.vertx", module: "vertx-auth-common")
+        exclude(group: "io.vertx", module: "vertx-bridge-common")
+    }
+//    implementation(group: 'io.vertx', name: 'vertx-codegen', version: "${_vertx_version}") {
+//        exclude(group: "com.fasterxml.jackson.core")
+//    }
+
+    testImplementation(group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${_jupiter_version}")
+}
+
+compileJava {
+    options.encoding 'utf-8'
+    options.compilerArgs << '-Xlint:deprecation'
+    options.compilerArgs << '-Xlint:unchecked'
+}
+
+jar {
+
+    def _dir = 'dependencies'
+    def _runtime = configurations.runtimeClasspath
+
+    manifest {
+        attributes 'Main-Class': _main_class
+        if (!_runtime.isEmpty()) {
+            attributes 'Class-Path': _runtime.collect {_dir + '/' + it.name}.join(' ')
+        }
+        attributes 'Build-Jdk': System.getProperty("java.version")
+        attributes 'X-Compile-Source-JDK': _sourceCompat
+        attributes 'X-Compile-Target-JDK': _targetCompat
+    }
+
+    if (!_runtime.isEmpty()) {
+        copy {
+            from _runtime
+            into "build/libs/${_dir}"
+        }
+    }
+}
+

@@ -1,0 +1,20 @@
+### Darwin(mac) files
+.DS_Store
+
+### Project files
+file-uploads
+
+### IntelliJ files
+.idea
+*.iml
+out
+gen
+
+### Gradle template
+build
+.gradle
+!gradle-wrapper.jar
+
+### -- if using CI, comment the follow two files
+#gradlew
+#gradlew.bat
